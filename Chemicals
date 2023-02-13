@@ -1,0 +1,105 @@
+---Most used chemicals in cosmetics  and personal care---
+
+SELECT
+  ChemicalName,
+  COUNT(ChemicalName) AS chemiccal_count
+FROM
+  `SQL_practice.Chemicals`
+GROUP BY
+  ChemicalName
+ORDER BY
+  chemiccal_count DESC
+LIMIT
+  5;
+
+ ---Companies that used the most reported chemical in their cosmetics andd personal care---
+
+SELECT
+  CompanyName,
+  ChemicalName,
+  COUNT(InitialDateReported) AS chemical_reported
+FROM
+  `SQL_practice.Chemicals`
+GROUP BY
+  CompanyName,
+  ChemicalName
+ORDER BY
+  chemical_reported DESC
+LIMIT
+  5 
+  
+---which brands had chemicals that was removed and discontinued? Identify the chemicals
+
+SELECT
+  BrandName,
+  ChemicalName,
+  COUNT(*) AS Chemical_removed
+FROM
+  `SQL_practice.Chemicals`
+WHERE
+  DiscontinuedDate IS NOT NULL
+  AND ChemicalDateRemoved IS NOT NULL
+GROUP BY
+  BrandName,
+  ChemicalName
+ORDER BY
+  Chemical_removed DESC 
+  
+---Brands with the most reported chemicals in 2018
+
+SELECT
+  BrandName,
+  COUNT(InitialDateReported) AS chemical_reported
+FROM
+  `SQL_practice.Chemicals`
+WHERE
+  InitialDateReported BETWEEN '2018-01-01'AND '2018-12-31'
+GROUP BY
+  BrandName
+ORDER BY
+  chemical_reported DESC
+LIMIT
+  5 
+  
+---Which brands had chemicals discontinued and removed?
+
+SELECT
+  BrandName,
+  COUNT(*) AS Chemical_removed
+FROM
+  `SQL_practice.Chemicals`
+WHERE
+  DiscontinuedDate IS NOT NULL
+  AND ChemicalDateRemoved IS NOT NULL
+GROUP BY
+  BrandName
+ORDER BY
+  Chemical_removed DESC 
+  
+  
+---Identify the period between the creation of the removed chemicals and when they were actually removed.
+
+SELECT
+  ChemicalName,
+  DATE_DIFF(ChemicalDateRemoved, ChemicalCreatedAt,day) AS duration_days
+FROM
+  `SQL_practice.Chemicals`
+WHERE
+  ChemicalDateRemoved IS NOT NULL
+ORDER BY
+  duration_days DESC 
+  
+
+---How long were removed chemicals in baby products used?
+
+SELECT
+  ChemicalName,
+  DATE_DIFF(ChemicalDateRemoved, ChemicalCreatedAt, month) AS months_used
+FROM
+  `SQL_practice.Chemicals`
+WHERE
+  PrimaryCategory = 'Baby Products'
+  AND ChemicalDateRemoved IS NOT NULL
+ORDER BY
+  months_used DESC
+
